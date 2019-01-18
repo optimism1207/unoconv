@@ -17,7 +17,7 @@ def convert2pdf(outputFilePath, inputFilePath):
 
 os.system("unoconv --listener")
     
-arse = argparse.ArgumentParser(description="test!!")
+parse = argparse.ArgumentParser(description="test!!")
 parse.add_argument("-i", help="path to inputfile")
 parse.add_argument("-o", help="path to outputfile")
 args = parse.parse_args()
