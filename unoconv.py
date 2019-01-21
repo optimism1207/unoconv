@@ -2,50 +2,56 @@
 
 import sys,os,argparse
 
+#filename split
+def fileNameSplit(targetFile):
+    fileArgs = targetFile.split(".")
+    return fileArgs
+ 
 #for convert and printing 
-def convertCommon(neededFileName, outputPath, inputPath):
-    if str(neededFileName).endswith("docx"):
-        os.system("unoconv -f pdf -o %s %s" % (outputPath, inputPath))
-        if os.path.exists(outputPath + str(neededFileName)[:-5] + ".pdf"):
-            print("%s ====> %s.pdf Success!" % (str(neededFileName), str(neededFileName)[:-5]))
-        else:
-            print("%s convert failed!" % (str(neededFileName)))
+def convertCommon(neededFileName, fileType, outputPath, inputPath):
+    os.system("unoconv -f %s -o %s %s" % (fileType, outputPath, inputPath))
+    fileValue = fileNameSplit(neededFileName)
+    if os.path.exists(outputPath + fileValue[0] + "." + fileType):
+        print("%s ====> %s.%s Success!" % (neededFileName, fileValue[0], fileType))
     else:
-        os.system("unoconv -f pdf -o %s %s" % (outputPath, inputPath))
-        if os.path.exits(outputPath + str(neededFileName)[:-5] + ".pdf"):
-            print("%s ====> %s.pdf Success!" % (str(neededFileName), str(neededFileName)[:-4]))
-        else:
-            print("%s convert failed!" % (str(neededFileName)))
+        print("%s convert failed!" % (neededFileName))
 
-#convert to pdf using unoconv
-def convert2pdf(outputFilePath, inputFilePath):
-    if os.path.isfile(inputFilePath):
-        convertCommon(os.path.basename(inputFilePath), outputFilePath, inputFilePath) 
-    elif os.path.isdir(inputFilePath) and ( not inputFilePath.endswith("/") ):
-        inputFilePath = inputFilePath + "/" 
-        for root,dirs,filenames in os.walk(inputFilePath):
-            for filename in filenames:
-                if str(filename).endswith("docx") or str(filename).endswith("doc"):
-                    inputFile = inputFilePath + filename
-                    convertCommon(filename, outputFilePath, inputFile)
+#find target file and call convertCommon
+def findTargetFile(outputFilePath, inputFilePath):
+    if os.path.isfile(inputFilePath): #判断输入是不是文件
+        fileValue = fileNameSplit(os.path.basename(inputPath))
+        if fileValue[1] in fileTypeList and filename != fileValue[0] + "." + fileType: #输入输出目录相同时防止转换已转换生成的文件
+            convertCommon(os.path.basename(inputFilePath), fileType, outputFilePath, inputFilePath) 
     else:
         for root,dirs,filenames in os.walk(inputFilePath):
             for filename in filenames:
-                if str(filename).endswith("docx") or str(filename).endswith("doc"):
+                fileValue = fileNameSplit(filename)
+                if fileValue[1] in fileTypeList and filename != fileValue[0] + "." + fileType: 
                     inputFile = inputFilePath + filename
-                    convertCommon(filename, outputFilePath, inputFile)
+                    convertCommon(filename, fileType, outputFilePath, inputFile)
 
-os.system("unoconv --listener")
+os.system("unoconv --listener ")
+
+fileTypeList=["doc", "docx", "jpg", "png"]
     
 parse = argparse.ArgumentParser(description="test!!")
+
+parse.add_argument("-f", help="filetype needed to convert")
 parse.add_argument("-i", help="path to inputfile")
 parse.add_argument("-o", help="path to outputfile")
+
 args = parse.parse_args()
+fileType = args.f
 inputFilePath = args.i
 outputFilePath = args.o
-if not outputFilePath.endswith("/"):
-    outputFilePath = outputFilePath + "/"
 
-convert2pdf(outputFilePath, inputFilePath)
+if inputFilePath != None and outputFilePath != None: #输入输出路径不为空
+    if not outputFilePath.endswith("/"): #输出路径没"/",自动加"/"
+        outputFilePath = outputFilePath + "/"
+    if os.path.isdir(inputFilePath) and (not inputFilePath.endswith("/")): #输入为路径并且没"/",自动加"/"
+        inputFilePath = inputFilePath + "/"
+    findTargetFile(outputFilePath, inputFilePath)
+else:
+    print("Input and output file path needed.")
 
 
