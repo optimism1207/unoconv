@@ -9,8 +9,8 @@ def fileNameSplit(targetFile):
  
 #for convert and printing 
 def convertCommon(neededFileName, fileType, outputPath, inputPath):
-    os.system("unoconv -f %s -o %s %s" % (fileType, outputPath, inputPath))
     fileValue = fileNameSplit(neededFileName)
+    os.system("unoconv -f %s -o %s %s" % (fileType, outputPath, inputPath))
     if os.path.exists(outputPath + fileValue[0] + "." + fileType):
         print("%s ====> %s.%s Success!" % (neededFileName, fileValue[0], fileType))
     else:
@@ -19,20 +19,21 @@ def convertCommon(neededFileName, fileType, outputPath, inputPath):
 #find target file and call convertCommon
 def findTargetFile(outputFilePath, inputFilePath):
     if os.path.isfile(inputFilePath): #判断输入是不是文件
-        fileValue = fileNameSplit(os.path.basename(inputPath))
-        if fileValue[1] in fileTypeList and filename != fileValue[0] + "." + fileType: #输入输出目录相同时防止转换已转换生成的文件
-            convertCommon(os.path.basename(inputFilePath), fileType, outputFilePath, inputFilePath) 
+        filename = os.path.basename(inputFilePath)
+        fileValue = fileNameSplit(filename)
+        if fileValue[1] in convertRelation and fileType == convertRelation[fileValue[1]]:      
+            convertCommon(filename, fileType, outputFilePath, inputFilePath) 
     else:
         for root,dirs,filenames in os.walk(inputFilePath):
             for filename in filenames:
                 fileValue = fileNameSplit(filename)
-                if fileValue[1] in fileTypeList and filename != fileValue[0] + "." + fileType: 
+                if fileValue[1] in convertRelation and fileType == convertRelation[fileValue[1]]: 
                     inputFile = inputFilePath + filename
                     convertCommon(filename, fileType, outputFilePath, inputFile)
 
 os.system("unoconv --listener ")
 
-fileTypeList=["doc", "docx", "jpg", "png"]
+convertRelation={'doc':'pdf', 'docx':'pdf', 'pdf':'doc', 'pdf':'docx', 'jpg':'png', 'png':'jpg', 'txt':'csv', 'csv':'txt'}
     
 parse = argparse.ArgumentParser(description="test!!")
 

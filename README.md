@@ -1,7 +1,9 @@
 # unoconv
 Dockerfile and python-script for unoconv
 
-First time learn to build with Dockerfile
+First time learn to build with Dockerfile &
+
+A coding practice in python learning
 
 # To build 
 git clone this
@@ -11,6 +13,10 @@ cd unoconv
 docker build -t unoconv .
 
 # To use
-docker run -v sourcedir:dirindocker unoconv -i inputfilepath -o outputfilepath
+docker run -v sourcedir:dirindocker unoconv -f filetype -i inputfilepath -o outputfilepath
 
+批量转换文件夹中的文档
+已测试  docx，doc <==> pdf
+        jpg <==> png
 
+dockerfile里把ENTRYPOINT 设成/usr/bin/unoconv 直接用也可以
