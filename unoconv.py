@@ -12,11 +12,19 @@ def fileNameSplit(targetFile):
 #for convert and printing 
 def convertCommon(neededFileName, fileType, outputPath, inputPath):
     fileValue = fileNameSplit(neededFileName)
-    os.system("unoconv -f %s -o %s %s" % (fileType, outputPath, inputPath))
-    if os.path.exists(outputPath + fileValue[0] + "." + fileType):
-        print("%s ====> %s.%s Success!" % (neededFileName, fileValue[0], fileType))
+    if outputPath == None:
+        os.system("unoconv -f %s %s" % (fileType, inputPath))
+        (currentPath, currentFile) = os.path.split(inputPath)
+        if os.path.exists(currentPath + "/" +  fileValue[0] + "." + fileType):
+            print("%s ====> %s.%s Success!" % (neededFileName, fileValue[0], fileType))
+        else:
+            print("%s convert failed!" % (neededFileName))
     else:
-        print("%s convert failed!" % (neededFileName))
+        os.system("unoconv -f %s -o %s %s" % (fileType, outputPath, inputPath))
+        if os.path.exists(outputPath + fileValue[0] + "." + fileType):
+            print("%s ====> %s.%s Success!" % (neededFileName, fileValue[0], fileType))
+        else:
+            print("%s convert failed!" % (neededFileName))
 
 #find target file and call convertCommon
 def findTargetFile(outputFilePath, inputFilePath, depth=1):
@@ -53,8 +61,8 @@ inputFilePath = args.i
 outputFilePath = args.o
 depth = int(args.depth)
 
-if inputFilePath != None and outputFilePath != None: #输入输出路径不为空
-    if not outputFilePath.endswith("/"): #输出路径没"/",自动加"/"
+if inputFilePath != None: #输入路径不为空
+    if outputFilePath != None and not outputFilePath.endswith("/"): #输出路径没"/",自动加"/"
         outputFilePath = outputFilePath + "/"
     if os.path.isdir(inputFilePath) and (not inputFilePath.endswith("/")): #输入为路径并且没"/",自动加"/"
         inputFilePath = inputFilePath + "/"
