@@ -13,7 +13,7 @@ cd unoconv
 docker build -t unoconv .
 
 # To use
-docker run -v sourcedir:dirindocker unoconv -f filetype -i inputfilepath -o outputfilepath
+docker run -v sourcedir:dirindocker unoconv -f filetype -i inputfilepath -o outputfilepat --depth(可选，默认1)
 
 批量转换文件夹中的文档
 已测试  docx，doc <==> pdf
