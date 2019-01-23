@@ -27,7 +27,7 @@ def convertCommon(neededFileName, fileType, outputPath, inputPath):
             print("%s convert failed!" % (neededFileName))
 
 #find target file and call convertCommon
-def findTargetFile(outputFilePath, inputFilePath, depth=1):
+def findTargetFile(outputFilePath, inputFilePath, depth):
     if os.path.isfile(inputFilePath): #判断输入是不是文件
         filename = os.path.basename(inputFilePath)
         fileValue = fileNameSplit(filename)
@@ -59,7 +59,11 @@ args = parse.parse_args()
 fileType = args.f
 inputFilePath = args.i
 outputFilePath = args.o
-depth = int(args.depth)
+depth = args.depth
+if depth == None:
+    depth = 1
+else:
+    depth = int(depth) 
 
 if inputFilePath != None: #输入路径不为空
     if outputFilePath != None and not outputFilePath.endswith("/"): #输出路径没"/",自动加"/"
