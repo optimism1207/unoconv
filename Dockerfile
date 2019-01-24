@@ -2,22 +2,28 @@ from centos:latest
 
 MAINTAINER GX
 
-ENV REFRESHED_AT 2019-01-17
+ENV REFRESHED_AT 2019-01-24
 
-RUN yum install -y unoconv libreoffice-langpack-zh-Hans gcc make zlib zlib-devel libffi-devel \
-                    gcc-c++ bzip2 
-
-COPY ./Python-3.7.2.tgz /tmp
+RUN yum install -y unoconv \
+                   libreoffice-langpack-zh-Hans \ 
+                   gcc \
+                   make \
+                   zlib \
+                   zlib-devel \
+                   libffi-devel \
+                   gcc-c++ \
+                   bzip2 && \
+    yum clean all
 
 WORKDIR /tmp
 
-RUN tar zxvf Python-3.7.2.tgz 
-
-WORKDIR /tmp/Python-3.7.2
-
-RUN ./configure && make && make install
-
-RUN rm -rf /tmp/*
+COPY ./Python-3.7.2.tgz /tmp  
+RUN tar zxvf Python-3.7.2.tgz && \
+    cd Python-3.7.2 && \
+    ./configure && \ 
+    make && \ 
+    make install && \
+    rm -rf /tmp/*
 
 COPY ./unoconv.py /usr/local/bin/unoconv.py
 
