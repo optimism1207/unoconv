@@ -46,7 +46,7 @@ def findTargetFile(outputFilePath, inputFilePath, depth):
 
 os.system("unoconv --listener ")
 
-convertRelation={'doc':'pdf', 'docx':'pdf', 'pdf':'doc', 'pdf':'docx', 'jpg':'png', 'png':'jpg', 'txt':'csv', 'csv':'txt'}
+convertRelation={'doc':'pdf', 'docx':'pdf',  'jpg':'png', 'png':'jpg'}
     
 parse = argparse.ArgumentParser(description="test!!")
 
